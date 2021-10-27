@@ -24,17 +24,26 @@ object PingDevices {
     private const val PING_TTL = 128
     private const val PING_COMMAND = "ping"
 
-    suspend fun doNativePing(host: InetAddress) = withContext(IO) {
-        Timber.d(" ${Thread.currentThread().name} :- Native pinging the address ${host.hostAddress}")
-        PingResult(host).apply result@{
+    /**
+     * This method is used to perform the Native Ping, which runs the Ping command using the android process.
+     * @param hostAddress InetAddress- Address we need to ping
+     * @return PingResult
+     */
+    suspend fun doNativePing(hostAddress: InetAddress) = withContext(IO) {
+        Timber.d(" ${Thread.currentThread().name} :- Native pinging the address ${hostAddress.hostAddress}")
+        PingResult(hostAddress).apply result@{
             runCatching {
                 val pingProc = Runtime.getRuntime()
-                    .exec("$PING_COMMAND -c 1 -W $PING_TIME_OUT_IN_SEC -t $PING_TTL ${host.hostAddress}")
+                    .exec("$PING_COMMAND -c 1 -W $PING_TIME_OUT_IN_SEC -t $PING_TTL ${hostAddress.hostAddress}")
                 pingProc.waitFor()
                 pingProc.let {
                     when (it.exitValue()) {
                         0 -> {
-                            handlePingResponse(pingResult = this@result, pingResponse = it.inputStream.bufferedReader().readLines().toString())
+                            handlePingResponse(
+                                pingResult = this@result,
+                                pingResponse = it.inputStream.bufferedReader().readLines()
+                                    .toString()
+                            )
                         }
                         1 -> this@result.error = "failed, exit = 1"
                         else -> this@result.error = "error, exit = 2"
@@ -49,6 +58,9 @@ object PingDevices {
         }
     }
 
+    /**
+     * This method is to perform the Java ping.
+     */
     suspend fun doJavaPing(host: InetAddress, pingResult: PingResult) = withContext(IO) {
         Timber.d("  ${Thread.currentThread().name} :- Performing the java ping to the address ${host.hostAddress}")
         measureTimeMillis {

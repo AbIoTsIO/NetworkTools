@@ -18,8 +18,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            debuggable true
         }
     }
     compileOptions {
@@ -43,9 +47,6 @@ dependencies {
     //Coroutine
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
-
-    //Easy permission
-    implementation "pub.devrel:easypermissions:3.0.0"
 
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'

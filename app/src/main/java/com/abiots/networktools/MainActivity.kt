@@ -33,11 +33,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun iniSubnetListener() = coroutineScope.launch {
-        SubnetDevices.reachableSubnetDevices.collectLatest { set ->
+        SubnetDevices.getSubnetDevicesFlow().collectLatest { set ->
             Log.d("TEST", "${Thread.currentThread().name} Getting the final flow data ${set.size}")
             binding.textP.text = "\n\n final size ${set.size}"
             set.forEach { device ->
-                binding.textP.append("\n\n\t IP address ${device.ip} is reachable ${device.hostName}")
+                binding.textP.append("\n\n\t IP address ${device.ip} is reachable ${device.macAddress}")
             }
         }
     }
