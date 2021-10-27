@@ -1,6 +1,6 @@
 # NetworkTools Kotlin
-[![Release](https://jitpack.io/v/User/Repo.svg)]
-(https://jitpack.io/#AbIoTsolution/NetworkTools/release-1.0.0)
+[![](https://jitpack.io/v/AbIoTsolution/NetworkTools.svg)](https://jitpack.io/#AbIoTsolution/NetworkTools)
+
 
 ## Usage
 
